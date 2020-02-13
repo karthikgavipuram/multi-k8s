@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deploymnent
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      component: server
+  template:
+    metadata:
+      labels:
+        component: server
+    spec:
+      containers:
+        - name: server
+          image: stephengrider/multi-server
+          ports:
+            - containerPort: 5000
+          env:
+            - name: REDIS_HOST
+              value: redis-cluster-ip-service
+            - name: REDIS_PORT
+              value: '6379'
+            - name: PGUSER
+              value: postgres
+            - name: PGHOST #is connection string telling multiserver how to reach out our postgress instance
+              value: postgres-cluster-ip-service #name from postgress cluster Service
+            - name: PGPORT
+              value: '5432'
+            - name: PGDATABASE
+              value: postgres
+            - name: PGPASSWORD # PGPASSWORD  can be anything as specified in the dockerhun container repository
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword       #name is same as when we create secret password(pgpassword in this case) for an db or appln
+                  key: PGPASSWORD  #kubernetes automatically search for name secret and search for key associated with a value & above one for postgres is different from this PGPASSWORD

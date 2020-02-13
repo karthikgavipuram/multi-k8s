@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:                  #additional config options that is going to specify higher level of configurations around the ingres abij that is going to be created
+    kubernetes.io/ingress.class: nginx #it is going to tell kubernetes ingress controller based on nginx project
+    nginx.ingress.kubernetes.io/rewrite-target: / #configure how the actual copy of nfinx behave
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /   #depending on the request by '/' or '/api' nginx assigns or route a port below
+            backend:
+              serviceName: client-cluster-ip-service
+              servicePort: 3000
+          - path: /api/
+            backend:
+              serviceName: server-cluster-ip-service
+              servicePort: 5000

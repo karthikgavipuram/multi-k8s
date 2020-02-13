@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: database-persistent-volume-claim
+spec:
+  # storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+    #kubernetes find out these access modes and has to have exactly 2gb of memory
+  resources:
+    requests:
+      storage: 2Gi
